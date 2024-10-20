@@ -1,13 +1,17 @@
 from pathlib import Path
 from os import system
 from tkinter import Tk, Canvas,Label, Button, PhotoImage,Frame
-from threading import Thread
+from tkinter.font import Font
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame0")
 
 video=None
 page=None
+label=None
+image_add=None
+image_lable=None
+play_mode='play1.png'
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
@@ -16,10 +20,13 @@ window = Tk()
 window.attributes("-fullscreen", True)
 window.configure(bg = "#FFFFFF")
 window.update_idletasks()
+window.title("Mositto")
 screen_size={'w':window.winfo_width(),'h':window.winfo_height()}
 print(screen_size)
+custom_font=Font(family='Sheed',size=24)
 frame_start=Frame(window)
 frame_play=Frame(window)
+
 def resizer(num,mode):
     if mode=='w':
         return num*(screen_size["w"]/1440)
@@ -40,13 +47,28 @@ canvas.place(x = 0, y = 0)
 
 # Example usage
 def play_video():
-    system(video)
-    switch_to_start()
+    if video!=None:
+        system(video)
+        switch_to_start()
+    else:
+        switch_to_start()
+
 def switch_to_play():
     frame_start.pack_forget()
     canvas.pack_forget()
     frame_play.pack()
     canvas2.pack()
+    
+def update_image(IM,BG=None):
+    global image_add
+    global image_lable
+    if IM!=None and BG!=None:
+        image_add=PhotoImage(master=frame_play,file=relative_to_assets(IM)).subsample(int(resizer(420,'w')/420),int(resizer(370,'h')/370))
+        image_lable.config(image=image_add,bg=BG)
+    elif BG!=None:
+        image_lable.configure(image='',bg=BG,text='در حال بروز رسانی',font=custom_font)
+    else:
+        image_lable.configure(image='',bg='#FFFFFF',text='در حالی بروز رسانی',font=custom_font)
 def switch_to_start():
     frame_start.pack()
     canvas.pack()
@@ -54,14 +76,174 @@ def switch_to_start():
     canvas2.pack_forget()
 
 def play_1():
+   global label
    global video
-   video='1.mp4'
-   label = Label(canvas2, text='''نام بازی: فوتبالیست ماشینی 
-قیمت بلیط بای هر نفر: 100 هزار تومان
-زمان بازی: 10 دقیقه''', bg="#FFFFFF", fg="#000000", font=("Arial", 24),justify='right')
-   label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+100)
+   video='Machin_soccer.mp4'
+   canvas2.configure(bg='#BEE6ce')
+   if label==None:
+        label = Label(canvas2, text='''نام بازی: فوتبالیست ماشینی 
+قیمت بلیط برای هر نفر: 100 هزار تومان
+زمان بازی: 10 دقیقه''', bg="#BEE6ce", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text='''نام بازی: فوتبالیست ماشینی 
+قیمت بلیط برای هر نفر: 100 هزار تومان
+زمان بازی: 10 دقیقه''',bg='#BEE6ce')
+   update_image(None,'#BEE6ce')
    switch_to_play()
-
+   
+def play_2():
+   global label
+   global video
+   video='Robo_war.mp4'
+   if label==None:
+        label = Label(canvas2, text='''نام بازی: جنگ ربات ها 
+قیمت بلیط برای هر نفر: 150 هزار تومان
+زمان بازی: 10 دقیقه''', bg="#FE5F55", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text='''نام بازی: جنگ ربات ها 
+قیمت بلیط برای هر نفر: 150 هزار تومان
+زمان بازی: 10 دقیقه''',bg='#FE5F55')
+   canvas2.configure(bg='#FE5F55')
+   update_image("Robo_war.png",'#FE5F55')
+   switch_to_play()
+def play_3():
+   global label
+   global video
+   video='RC_climber.mp4'
+   if label==None:
+        label = Label(canvas2, text='''نام بازی: ماشین صخره نورد 
+قیمت بلیط برای هر نفر: 200 هزار تومان
+زمان بازی: 10 دقیقه''', bg="#319a08", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text='''نام بازی: ماشین صخره نورد 
+قیمت بلیط برای هر نفر: 200 هزار تومان
+زمان بازی: 10 دقیقه''',bg='#319a08')
+   canvas2.configure(bg='#319a08')
+   update_image('RC_climber.png','#319a08')
+   switch_to_play()
+def play_4():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text="درحال بروز رسانی", bg="#FFFFFF", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text="درحال بروز رسانی",bg='#FFFFFF')
+   canvas2.configure(bg='#FFFFFF')
+   update_image(None)
+   switch_to_play()
+def play_5():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text="درحال بروز رسانی", bg="#FFFFFF", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text="درحال بروز رسانی",bg='#FFFFFF')
+   canvas2.configure(bg='#FFFFFF')
+   update_image(None)
+   switch_to_play()
+def play_6():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text="درحال بروز رسانی", bg="#FFFFFF", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text="درحال بروز رسانی",bg='#FFFFFF')
+   canvas2.configure(bg='#FFFFFF')
+   update_image(None)
+   switch_to_play()
+def play_7():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text='''نام بازی: فوتبال انسان نما 
+قیمت بلیط برای هر نفر: 150 هزار تومان
+زمان بازی: 10 دقیقه''', bg="#15887d", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text='''نام بازی: فوتبال انسان نما 
+قیمت بلیط برای هر نفر: 150 هزار تومان
+زمان بازی: 10 دقیقه''',bg='#15887d')
+   canvas2.configure(bg='#15887d')
+   update_image(None,'#15887d')
+   switch_to_play()
+def play_8():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text="درحال بروز رسانی", bg="#FFFFFF", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text="درحال بروز رسانی",bg='#FFFFFF')
+   canvas2.configure(bg='#FFFFFF')
+   update_image(None)
+   switch_to_play()
+def play_9():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text='''نام بازی: مسیر چوبی کودکان 
+قیمت بلیط برای هر نفر: 150 هزار تومان
+زمان بازی: 30 دقیقه''', bg="#309a08", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text='''نام بازی: مسیر چوبی کودکان 
+قیمت بلیط برای هر نفر: 150 هزار تومان
+زمان بازی: 30 دقیقه''',bg='#309a08')
+   canvas2.configure(bg='#309a08')
+   update_image(None,'#309a08')
+   switch_to_play()
+def play_10():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text='''نام بازی: واقعیت مجازی 
+قیمت بلیط برای هر نفر: 100 هزار تومان
+زمان بازی: 10 دقیقه''', bg="#dd89ff", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text='''نام بازی: واقعیت مجازی 
+قیمت بلیط برای هر نفر: 100 هزار تومان
+زمان بازی: 10 دقیقه''',bg='#dd89ff')
+   canvas2.configure(bg='#dd89ff')
+   update_image(None,'#dd89ff')
+   switch_to_play()
+def play_11():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text="درحال بروز رسانی", bg="#FFFFFF", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text="درحال بروز رسانی",bg='#FFFFFF')
+   canvas2.configure(bg='#FFFFFF')
+   update_image(None)
+   switch_to_play()
+def play_12():
+   global label
+   global video
+   video=None
+   if label==None:
+        label = Label(canvas2, text="درحال بروز رسانی", bg="#FFFFFF", fg="#000000", font=custom_font,justify='right')
+        label.place(x=screen_size['h']+resizer(230,'h'), y=resizer(62.0,'h')+resizer(100,'h'))
+   else:
+        label.config(text="درحال بروز رسانی",bg='#FFFFFF')
+   canvas2.configure(bg='#FFFFFF')
+   update_image(None)
+   switch_to_play()
 
 button_image_1 = PhotoImage(master=frame_start,
     file=relative_to_assets("button_1.png"))
@@ -70,7 +252,7 @@ button_1 = Button(frame_start,
     borderwidth=0,
     highlightthickness=0,
     command=play_1,
-    relief="flat"
+    relief="flat",
 )
 button_1.place(
     x=resizer(0.0,'w'),
@@ -85,8 +267,8 @@ button_2 = Button(frame_start,
     image=button_image_2,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_2 clicked"),
-    relief="flat"
+    command=play_2,
+    relief="flat",
 )
 button_2.place(
     x=resizer(0.0,'w'),
@@ -101,7 +283,7 @@ button_3 = Button(frame_start,
     image=button_image_3,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_3 clicked"),
+    command=play_3,
     relief="flat"
 )
 button_3.place(
@@ -117,7 +299,7 @@ button_4 = Button(frame_start,
     image=button_image_4,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_4 clicked"),
+    command=play_4,
     relief="flat"
 )
 button_4.place(
@@ -133,7 +315,7 @@ button_5 = Button(frame_start,
     image=button_image_5,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_5 clicked"),
+    command=play_5,
     relief="flat"
 )
 button_5.place(
@@ -149,7 +331,7 @@ button_6 = Button(frame_start,
     image=button_image_6,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_6 clicked"),
+    command=play_6,
     relief="flat"
 )
 button_6.place(
@@ -165,7 +347,7 @@ button_7 = Button(frame_start,
     image=button_image_7,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_7 clicked"),
+    command=play_7,
     relief="flat"
 )
 button_7.place(
@@ -181,7 +363,7 @@ button_8 = Button(frame_start,
     image=button_image_8,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_8 clicked"),
+    command=play_8,
     relief="flat"
 )
 button_8.place(
@@ -197,7 +379,7 @@ button_9 = Button(frame_start,
     image=button_image_9,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_9 clicked"),
+    command=play_9,
     relief="flat"
 )
 button_9.place(
@@ -213,7 +395,7 @@ button_10 = Button(frame_start,
     image=button_image_10,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_10 clicked"),
+    command=play_10,
     relief="flat"
 )
 button_10.place(
@@ -229,7 +411,7 @@ button_11 = Button(frame_start,
     image=button_image_11,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_11 clicked"),
+    command=play_11,
     relief="flat"
 )
 button_11.place(
@@ -245,7 +427,7 @@ button_12 = Button(frame_start,
     image=button_image_12,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_12 clicked"),
+    command=play_12,
     relief="flat"
 )
 button_12.place(
@@ -273,28 +455,25 @@ canvas2 = Canvas(
     relief = "ridge"
 )
 canvas2.place(x = 0, y = 0)
-image_image_2 = PhotoImage(master=frame_play,
-    file=relative_to_assets("image_1.png"))
-image_2 = canvas.create_image(
-    resizer(num=720,mode='w'),
-    resizer(num=57.0,mode='h'),
-    image=image_image_2
-)
 button_image_20 = PhotoImage(master=frame_play,
-    file=relative_to_assets("play.png"))
+    file=relative_to_assets(play_mode))
 button_20 = Button(frame_play,
     image=button_image_20,
     borderwidth=0,
     highlightthickness=0,
     command=play_video,
-    relief="flat"
+    relief="flat",
 )
+print(button_image_20)
 button_20.place(
-    x=resizer(555,'w'),
-    y=resizer(405.0,'h'),
-    width=resizer(340.0,'h'),
-    height=resizer(340.0,'w')
+    x=screen_size['h']+resizer(330,'h'),
+    y=resizer(490.0,'h'),
+    width=resizer(244.0,'h'),
+    height=resizer(221.0,'w')
 )
+image_add=PhotoImage(master=frame_play,file=relative_to_assets("button_12.png")).subsample(int(resizer(420,'w')/420),int(resizer(370,'h')/370))
+image_lable=Label(canvas2,image=image_add)
+image_lable.place(x=resizer(18,'w') ,y=(resizer(62.0,'h')+resizer(100,'h'))/2)
 if page==None:
     switch_to_start()
     page='start'
